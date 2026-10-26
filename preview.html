@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小黄包一二 · 动作预览</title>
+<style>
+:root{font-family:"Microsoft YaHei",system-ui,sans-serif;color:#462b24;background:#faf4ec}*{box-sizing:border-box}body{margin:0;padding:34px 22px}main{max-width:1040px;margin:auto}h1{font-size:30px;margin:6px 0 10px}p{line-height:1.8;color:#79665c}.tag{font-size:12px;letter-spacing:2px;color:#a97757}.layout{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:26px}.card{border:1px solid #e8dacf;border-radius:24px;padding:24px;background:#fffcf8}.stage{height:340px;display:grid;place-items:center;position:relative;border-radius:18px;background:#f3e6d7;touch-action:none;overflow:hidden}.stage.dark{background:#28242a}.sprite{width:192px;height:208px;background-image:url('pet/spritesheet.webp');background-size:1536px 2288px;background-repeat:no-repeat;transform:scale(1.28);transform-origin:center;flex:none}.states{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}button{font:inherit;border:1px solid #dfcfc0;background:white;color:#664d40;border-radius:12px;padding:11px 8px;cursor:pointer}button.active,button:hover{background:#6c4434;color:white;border-color:#6c4434}.meta{font-size:13px;color:#947d6c;margin-top:14px}.controls{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap}.controls button{font-size:12px;padding:8px 12px}.directions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.directions button{padding:9px}.badge{position:absolute;top:14px;left:16px;font-size:12px;color:#8c6e58}.dark .badge{color:#ddc5b1}footer{font-size:13px;color:#947d6c;margin-top:26px;line-height:1.8}a{color:#815c45}@media(max-width:700px){.layout{grid-template-columns:1fr}.stage{height:300px}body{padding:24px 14px}}
+</style>
+<main><div class="tag">YIER WITH A YELLOW BAG</div><h1>斜挎小黄包的一二</h1><p>黄色小挎包、深色围巾和黑色小脚。工作时拿出贴着布布 wink 大头照的小电脑。点选动作，或在右侧移动鼠标，让一二看向你。</p>
+<div class="layout"><section class="card"><div class="stage" id="motion-stage"><span class="badge" id="state-label">待机</span><div class="sprite" id="motion"></div></div><div class="states" id="states"></div><div class="controls"><button id="pause">暂停</button><button id="background">切换深色背景</button><button id="size">实际大小</button></div><div class="meta" id="frame-count">6 帧循环</div></section>
+<section class="card"><div class="stage" id="look-stage"><span class="badge" id="look-label">移动鼠标 · 看向不同方向</span><div class="sprite" id="look"></div></div><div class="directions" id="directions"></div><div class="meta">鼠标回到中央，恢复自然待机姿态。小黄包始终保持在一二的同一侧。</div></section></div>
+<footer>在 Codex 中启用：全部解压 → 双击 install.cmd → 设置 → Mini 与虚拟宠物 → 小刷新图标 ↻ → 小黄包一二。<br><a href="pet/spritesheet.webp">查看完整动作图集</a> · <a href="docs/contact-sheet.png">查看动作总览</a> · <a href="CREDITS.md">角色作者与参考来源</a></footer></main>
+<script>
+const states=[['idle','待机',6,[280,110,110,140,140,320]],['running-right','向右移动',8,[120,120,120,120,120,120,120,220]],['running-left','向左移动',8,[120,120,120,120,120,120,120,220]],['waving','招手',4,[140,140,140,280]],['jumping','跳跃',5,[140,140,140,140,280]],['failed','遇到困难',8,[140,140,140,140,140,140,140,240]],['waiting','等你回应',6,[150,150,150,150,150,260]],['running','认真思考',6,[120,120,120,120,120,220]],['review','查看成果',6,[150,150,150,150,150,280]]];
+let row=0,frame=0,timer,paused=false,large=true;
+const motion=document.getElementById('motion'),look=document.getElementById('look');
+function cell(el,r,c){el.style.backgroundPosition=`${-192*c}px ${-208*r}px`}
+function step(){clearTimeout(timer);cell(motion,row,frame);if(!paused)timer=setTimeout(()=>{frame=(frame+1)%states[row][2];step()},states[row][3][frame])}
+function choose(i){row=i;frame=0;document.getElementById('state-label').textContent=states[i][1];document.getElementById('frame-count').textContent=states[i][2]+' 帧循环';document.querySelectorAll('#states button').forEach((b,j)=>b.classList.toggle('active',j===i));step()}
+states.forEach((s,i)=>{let b=document.createElement('button');b.textContent=s[1];b.onclick=()=>choose(i);document.getElementById('states').append(b)});
+document.getElementById('pause').onclick=e=>{paused=!paused;e.target.textContent=paused?'继续播放':'暂停';step()};
+document.getElementById('background').onclick=()=>document.querySelectorAll('.stage').forEach(e=>e.classList.toggle('dark'));
+document.getElementById('size').onclick=e=>{large=!large;document.querySelectorAll('.sprite').forEach(e=>e.style.transform=`scale(${large?1.28:1})`);e.target.textContent=large?'实际大小':'放大查看'};
+const dirNames=['上','右上','右上','右上','右','右下','右下','右下','下','左下','左下','左下','左','左上','左上','左上'];
+function gaze(n){if(n<0){cell(look,0,0);document.getElementById('look-label').textContent='自然待机';return}cell(look,9+Math.floor(n/8),n%8);document.getElementById('look-label').textContent='看向'+dirNames[n]}
+[[14,'↖'],[0,'↑'],[2,'↗'],[12,'←'],[-1,'自然'],[4,'→'],[10,'↙'],[8,'↓'],[6,'↘']].forEach(([n,label])=>{let b=document.createElement('button');b.textContent=label;b.onclick=()=>gaze(n);document.getElementById('directions').append(b)});
+document.getElementById('look-stage').onpointermove=e=>{let r=e.currentTarget.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;if(Math.hypot(x,y)<35)return gaze(-1);let a=(Math.atan2(x,-y)*180/Math.PI+360)%360;gaze(Math.round(a/22.5)%16)};
+document.getElementById('look-stage').onpointerleave=()=>gaze(-1);choose(0);gaze(-1);
+</script></html>
