@@ -1,0 +1,20 @@
+name: Mac installer
+on:
+  push:
+    paths:
+      - 'install.sh'
+      - 'install.command'
+      - 'pet/**'
+      - 'tools/build-macos-release.py'
+      - 'tests/test_install_macos.py'
+      - '.github/workflows/macos-installer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test macOS installer and ZIP
+        run: python3 -m unittest discover -s tests -p 'test_*macos.py' -v

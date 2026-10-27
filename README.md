@@ -28,6 +28,20 @@ A Yier companion for the Codex desktop app, with a yellow crossbody bag, a scarf
 
 部分新版客户端会将本地宠物迁移为云端宠物。此时，仅覆盖本地文件不能更新已迁移的云端图集。请使用下方「安装到 Codex」入口，按客户端提示导入本版，再选择新导入的一二；也可在宠物管理中用本版图集更新原宠物。云端更新与本地文件安装是两条不同路径。
 
+## Mac 安装
+
+**[下载 Mac 安装包](https://github.com/Touyuanyuan/codex-yier-yellow-bag-pet/releases/download/v1.0.0/codex-yier-yellow-bag-pet-v1.0.0-macos.zip)** · [完整 Mac 安装说明](docs/INSTALL-MACOS.md)
+
+1. 下载 `codex-yier-yellow-bag-pet-v1.0.0-macos.zip`，解压并打开文件夹。
+2. 双击 **`install.command`**，等待终端提示「小黄包一二安装完成」。
+3. 回到 Codex：**设置 → Mini 与虚拟宠物 / Pets → 刷新列表 ↻ → 选择「小黄包一二」**。
+
+无需管理员权限、Python、Node.js 或 Homebrew。Mac 包与 Windows 包使用同一套 R2 定稿图集。
+
+若双击打不开：打开 Mac「终端」，输入 `/bin/bash `（末尾留空格），把解压后的 `install.command` 拖入终端，再按回车。
+
+默认安装到 `~/.codex/pets/yier-yellow-bag`；自定义 `CODEX_HOME` 的用法、手动复制和更新方法见完整说明。
+
 ## 预览
 
 ![小黄包一二动作预览](docs/all-states.gif)
@@ -56,7 +70,7 @@ A Yier companion for the Codex desktop app, with a yellow crossbody bag, a scarf
   spritesheet.webp
 ```
 
-然后在设置中刷新、选择。macOS / Linux 尚未在本项目中验证，不提供已适配承诺。
+然后在设置中刷新、选择。
 
 ## 卸载
 
@@ -67,7 +81,7 @@ A Yier companion for the Codex desktop app, with a yellow crossbody bag, a scarf
 - 采用已在 Windows 客户端安装并核对的定稿图集。
 - v2 图集为1536 × 2288像素，8列 × 11行，每格192 × 208像素。
 - 本地安装、重复安装及同名版本冲突行为在独立测试目录验证。
-- 安装脚本只使用 Windows 自带 PowerShell，不联网、不请求管理员权限。
+- Windows 安装脚本使用系统自带 PowerShell；Mac 使用系统自带 Bash 和工具，均不联网、不请求管理员权限。
 - 公开包仅含安装所需文件、预览和工具；原作者下载图片及本地制作记录不随包分发。
 
 开发者可运行 `python tools/build-release.py` 构建发行包，用 `powershell -NoProfile -ExecutionPolicy Bypass -File tests/test-install.ps1` 验证安装行为。
